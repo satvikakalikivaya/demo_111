@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="BikeWorld — quality bikes & accessories. Shop mountain, road and hybrid bikes." />
+  <title>BikeWorld — Bikes & Accessories</title>
+
+  <style>
+    :root{
+      --bg:#f9f9f9;
+      --primary:#ff6600;
+      --dark:#222;
+      --card:#fff;
+      --muted:#666;
+      --radius:10px;
+      --shadow:0 6px 18px rgba(16,24,40,0.08);
+      --max-width:1100px;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background:var(--bg);
+      color:#222;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.45;
+    }
+
+    header{
+      background:var(--dark);
+      color:#fff;
+      padding:14px 20px;
+      position:sticky;
+      top:0;
+      z-index:30;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    }
+    .container{
+      max-width:var(--max-width);
+      margin:0 auto;
+      display:flex;
+      align-items:center;
+      gap:20px;
+      justify-content:space-between;
+    }
+    .brand {font-weight:700; letter-spacing:0.2px;}
+    nav a{ color:#fff; text-decoration:none; margin:0 12px; font-weight:600; font-size:14px; opacity:0.95}
+    nav a:hover{ color:var(--primary) }
+
+    .cart-btn{
+      background:transparent;
+      border:1px solid rgba(255,255,255,0.08);
+      padding:6px 10px;
+      border-radius:8px;
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      color:#fff;
+      cursor:pointer;
+    }
+    .cart-count{
+      background:var(--primary);
+      color:white;
+      font-weight:700;
+      padding:3px 8px;
+      border-radius:999px;
+      font-size:13px;
+    }
+
+    /* HERO */
+    .hero{
+      margin-top:0;
+      height:420px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      color:white;
+      position:relative;
+      overflow:hidden;
+    }
+    .hero::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background-image: url('https://images.unsplash.com/photo-1508973372-a1fef02d81f4?auto=format&fit=crop&w=1600&q=80');
+      background-position:center;
+      background-size:cover;
+      background-repeat:no-repeat;
+      filter:brightness(0.45) contrast(1.05);
+      z-index:0;
+    }
+    .hero .hero-inner{
+      position:relative;
+      z-index:2;
+      max-width:1100px;
+      padding:40px 20px;
+    }
+    .hero h1{ font-size:38px; margin:0 0 12px; }
+    .hero p{ margin:0; color:#fff; opacity:0.95; }
+
+    /* FEATURES */
+    .features{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      gap:18px;
+      padding:36px 20px;
+      margin-top:18px;
+      max-width:var(--max-width);
+      margin-left:auto;
+      margin-right:auto;
+    }
+    .feature{
+      background:var(--card);
+      border-radius:var(--radius);
+      padding:18px;
+      box-shadow:var(--shadow);
+      text-align:center;
+    }
+    .feature h3{ color:var(--primary); margin:6px 0 8px; }
+
+    /* PRODUCTS */
+    section.products{
+      padding:28px 20px 60px;
+      max-width:var(--max-width);
+      margin:0 auto;
+    }
+    .product-list{
+      display:grid;
+      gap:18px;
+      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+    }
+    .product{
+      background:var(--card);
+      border-radius:12px;
+      padding:14px;
+      box-shadow:var(--shadow);
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .product img{
+      width:100%;
+      height:160px;
+      object-fit:cover;
+      border-radius:8px;
+      display:block;
+    }
+    .product h4{ margin:6px 0 0; font-size:18px; }
+    .product .price{ font-weight:700; color:#111; margin-top:6px; }
+    .product .actions{ margin-top:auto; display:flex; gap:10px; align-items:center; }
+    .btn{
+      background:var(--primary);
+      color:#fff;
+      border:none;
+      padding:10px 12px;
+      border-radius:8px;
+      cursor:pointer;
+      font-weight:700;
+    }
+    .btn.ghost{
+      background:transparent;
+      color:var(--primary);
+      border:1px solid rgba(0,0,0,0.06);
+    }
+
+    /* CTA */
+    .cta{
+      background:var(--primary);
+      color:white;
+      padding:28px 20px;
+      text-align:center;
+      margin:0 0 20px;
+    }
+    .cta .btn{ background:white; color:var(--primary); }
+
+    footer{
+      background:var(--dark);
+      color:white;
+      padding:18px 20px;
+      text-align:center;
+    }
+
+    /* CART MODAL */
+    .modal-backdrop{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,0.45);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:60;
+    }
+    .modal{
+      width:95%;
+      max-width:700px;
+      background:white;
+      border-radius:12px;
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    .modal header{ padding:14px 18px; border-bottom:1px solid #eee; display:flex; align-items:center; justify-content:space-between; }
+    .modal .body{ max-height:60vh; overflow:auto; padding:14px 18px; }
+    .cart-item{ display:flex; gap:12px; align-items:center; padding:10px 0; border-bottom:1px dashed #eee; }
+    .cart-item img{ width:72px; height:54px; object-fit:cover; border-radius:8px; }
+    .cart-item .meta{ flex:1; }
+    .qty-control{ display:inline-flex; gap:6px; align-items:center; border-radius:8px; padding:4px; border:1px solid #eee; }
+    .modal footer{ padding:14px 18px; border-top:1px solid #eee; display:flex; justify-content:space-between; align-items:center; }
+
+    /* Toast */
+    .toast{
+      position:fixed;
+      right:18px;
+      bottom:18px;
+      background:#111;
+      color:#fff;
+      padding:10px 14px;
+      border-radius:8px;
+      box-shadow:var(--shadow);
+      z-index:80;
+      opacity:0;
+      transform:translateY(8px);
+      transition:all .28s ease;
+    }
+    .toast.show{ opacity:1; transform:none; }
+
+    /* responsiveness */
+    @media (max-width:640px){
+      .hero h1{ font-size:28px; }
+      header .container{gap:10px}
+      nav{ display:none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container">
+      <div style="display:flex;align-items:center;gap:14px">
+        <div class="brand">BikeWorld</div>
+        <nav aria-label="Main navigation">
+          <a href="#features">Features</a>
+          <a href="#products">Bikes</a>
+          <a href="#contact">Contact</a>
+        </nav>
+      </div>
+
+      <div>
+        <button id="open-cart" class="cart-btn" aria-label="Open cart">
+          🛒 Cart <span id="cart-count" class="cart-count">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" role="banner" aria-label="Bike hero">
+      <div class="hero-inner">
+        <h1>Find Your Perfect Ride 🚴</h1>
+        <p>Quality bikes for every rider — mountain, road and hybrid. Free delivery over $499.</p>
+      </div>
+    </section>
+
+    <section id="features" class="features" aria-labelledby="features-title">
+      <div class="feature">
+        <h3>🚴 High Quality</h3>
+        <p>Durable frames and components built to last.</p>
+      </div>
+      <div class="feature">
+        <h3>💰 Affordable</h3>
+        <p>Best value without compromising performance.</p>
+      </div>
+      <div class="feature">
+        <h3>⚡ Fast Delivery</h3>
+        <p>Quick dispatch and doorstep delivery.</p>
+      </div>
+    </section>
+
+    <section id="products" class="products" aria-labelledby="products-title">
+      <h2 style="text-align:center;margin:6px 0 20px;">Our Bikes</h2>
+      <div class="product-list" id="product-list" aria-live="polite"></div>
+    </section>
+
+    <section class="cta" id="contact">
+      <h3>Ready to Ride?</h3>
+      <p>Order your bike today and enjoy a special launch discount.</p>
+      <button class="btn" onclick="window.location.href='#products'">Shop Bikes</button>
+    </section>
+  </main>
+
+  <footer>
+    &copy; 2025 BikeWorld • Built with care
+  </footer>
+
+  <!-- CART MODAL -->
+  <div id="cart-modal" class="modal-backdrop" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="cart-title">
+      <header>
+        <div><strong id="cart-title">Your Cart</strong></div>
+        <div><button id="close-cart" class="btn ghost">Close</button></div>
+      </header>
+      <div class="body" id="cart-body">
+        <!-- cart items inserted here -->
+      </div>
+      <footer>
+        <div>Total: <strong id="cart-total">$0.00</strong></div>
+        <div>
+          <button id="checkout" class="btn">Checkout</button>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    // Products data (id, name, price, img)
+    const PRODUCTS = [
+      { id: 'mtn-001', name: 'Mountain Bike', price: 500.00, img: 'https://images.unsplash.com/photo-1629811134608-90c2c7353f72?auto=format&fit=crop&w=800&q=80' },
+      { id: 'road-002', name: 'Road Bike', price: 650.00, img: 'https://images.unsplash.com/photo-1605719125366-71eb3e1e6e36?auto=format&fit=crop&w=800&q=80' },
+      { id: 'hyb-003', name: 'Hybrid Bike', price: 400.00, img: 'https://images.unsplash.com/photo-1525105000439-83cfd0aee30a?auto=format&fit=crop&w=800&q=80' }
+    ];
+
+    // Cart structure: { productId: { product: {...}, qty: number } }
+    let cart = {};
+
+    // Helpers
+    const $ = sel => document.querySelector(sel);
+    const $$ = sel => Array.from(document.querySelectorAll(sel));
+    const formatPrice = n => '$' + n.toFixed(2);
+
+    // Render products to page
+    function renderProducts() {
+      const container = $('#product-list');
+      container.innerHTML = PRODUCTS.map(p => `
+        <article class="product" data-id="${p.id}">
+          <img src="${p.img}" alt="${p.name}" loading="lazy" />
+          <h4>${p.name}</h4>
+          <div class="price">${formatPrice(p.price)}</div>
+          <div class="actions">
+            <button class="btn add-btn" data-id="${p.id}" aria-label="Add ${p.name} to cart">Add to Cart</button>
+            <button class="btn ghost" aria-label="View ${p.name} details" onclick="alert('Product details coming soon')">View</button>
+          </div>
+        </article>
+      `).join('');
+      // attach listeners
+      $$('.add-btn').forEach(btn => {
+        btn.addEventListener('click', e => {
+          const id = e.currentTarget.dataset.id;
+          addToCart(id);
+        });
+      });
+    }
+
+    // LocalStorage
+    const STORAGE_KEY = 'bikeworld_cart_v1';
+    function saveCart() {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(cart)); } catch(e){ console.warn('localStorage error', e);}
+    }
+    function loadCart() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        cart = raw ? JSON.parse(raw) : {};
+      } catch(e){ cart = {}; }
+      updateCartCount();
+    }
+
+    // Toast message
+    function showToast(text, ms=1600) {
+      const t = $('#toast');
+      t.textContent = text;
+      t.classList.add('show');
+      clearTimeout(t._hideTimer);
+      t._hideTimer = setTimeout(()=> t.classList.remove('show'), ms);
+    }
+
+    // Add to cart
+    function addToCart(id) {
+      const product = PRODUCTS.find(p => p.id === id);
+      if(!product) return;
+      if(cart[id]) cart[id].qty += 1;
+      else cart[id] = { product, qty: 1 };
+      saveCart();
+      updateCartCount();
+      showToast(`${product.name} added to cart`);
+    }
+
+    // Update cart counter
+    function updateCartCount() {
+      const count = Object.values(cart).reduce((s, it) => s + (it.qty || 0), 0);
+      $('#cart-count').textContent = count;
+    }
+
+    // Cart modal management
+    function openCart() {
+      renderCartModal();
+      $('#cart-modal').style.display = 'flex';
+      $('#cart-modal').setAttribute('aria-hidden','false');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeCart() {
+      $('#cart-modal').style.display = 'none';
+      $('#cart-modal').setAttribute('aria-hidden','true');
+      document.body.style.overflow = '';
+    }
+
+    function renderCartModal() {
+      const body = $('#cart-body');
+      body.innerHTML = '';
+      const items = Object.values(cart);
+      if(items.length === 0) {
+        body.innerHTML = '<p>Your cart is empty.</p>';
+        $('#cart-total').textContent = formatPrice(0);
+        return;
+      }
+      let total = 0;
+      items.forEach(it => {
+        const { product, qty } = it;
+        total += product.price * qty;
+        const row = document.createElement('div');
+        row.className = 'cart-item';
+        row.innerHTML = `
+          <img src="${product.img}" alt="${product.name}" loading="lazy" />
+          <div class="meta">
+            <div style="font-weight:700">${product.name}</div>
+            <div style="color:var(--muted);">${formatPrice(product.price)}</div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+            <div class="qty-control" data-id="${product.id}">
+              <button class="btn ghost qty-decr" aria-label="Decrease quantity">−</button>
+              <div style="min-width:28px;text-align:center;">${qty}</div>
+              <button class="btn ghost qty-incr" aria-label="Increase quantity">+</button>
+            </div>
+            <button class="btn ghost remove-item" data-id="${product.id}">Remove</button>
+          </div>
+        `;
+        body.appendChild(row);
+      });
+      $('#cart-total').textContent = formatPrice(total);
+
+      // attach qty and remove listeners
+      $$('.qty-incr').forEach(b => b.addEventListener('click', e => {
+        const id = e.currentTarget.closest('.qty-control').dataset.id;
+        cart[id].qty += 1; saveCart(); renderCartModal(); updateCartCount();
+      }));
+      $$('.qty-decr').forEach(b => b.addEventListener('click', e => {
+        const id = e.currentTarget.closest('.qty-control').dataset.id;
+        if(cart[id].qty > 1) cart[id].qty -= 1;
+        else delete cart[id];
+        saveCart(); renderCartModal(); updateCartCount();
+      }));
+      $$('.remove-item').forEach(b => b.addEventListener('click', e => {
+        const id = e.currentTarget.dataset.id;
+        delete cart[id]; saveCart(); renderCartModal(); updateCartCount();
+      }));
+    }
+
+    // Checkout placeholder
+    function checkout() {
+      const items = Object.values(cart);
+      if(items.length === 0) { showToast('Cart is empty'); return; }
+      // For demo: clear cart and show thank you
+      cart = {};
+      saveCart();
+      updateCartCount();
+      closeCart();
+      showToast('Thanks — your order is placed!');
+    }
+
+    // Events
+    document.addEventListener('DOMContentLoaded', () => {
+      renderProducts();
+      loadCart();
+
+      $('#open-cart').addEventListener('click', openCart);
+      $('#close-cart').addEventListener('click', closeCart);
+      $('#checkout').addEventListener('click', checkout);
+
+      // close modal when clicking backdrop
+      $('#cart-modal').addEventListener('click', (e) => {
+        if(e.target === $('#cart-modal')) closeCart();
+      });
+
+      // keyboard escape to close
+      document.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeCart(); });
+    });
+
+  </script>
+</body>
+</html>
+
